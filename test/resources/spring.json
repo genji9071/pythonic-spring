@@ -1,0 +1,17 @@
+{
+    "config_type": "bean",
+    "detail": {
+        "id": "ClassAAA",
+        "class_name": "test.src.ClassA.ClassA",
+        "properties": [
+            {
+                "name": "param1",
+                "value": "param1_value"
+            },
+            {
+                "name": "param2",
+                "value": 114511
+            }
+        ]
+    }
+}
