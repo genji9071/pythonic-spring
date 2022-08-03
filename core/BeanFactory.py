@@ -65,7 +65,7 @@ class BeanFactory:
         bean_config = _beans_config_.get(bean_name)
         if bean_config is not None:
             prop_dict = zip(map(lambda x: x.name, bean_config.properties),
-                        map(lambda x: x.value, bean_config.properties))
+                            map(lambda x: x.value, bean_config.properties))
         instance = bean_class.__new__(bean_class)
         instance.__init__(**dict(prop_dict))
         _beans_dict_[bean_name] = instance
@@ -73,3 +73,7 @@ class BeanFactory:
     @staticmethod
     def get_bean_by_name(name: str) -> IBean:
         return _beans_dict_.get(name)
+
+    @staticmethod
+    def get_beans_by_type(cls) -> List[IBean]:
+        return list(filter(lambda x: x.__class__.__name__ == cls, _beans_dict_.values()))

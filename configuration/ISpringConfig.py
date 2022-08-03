@@ -1,15 +1,12 @@
 from enum import Enum
 
-from pydantic import BaseModel
-
 from configuration.IAbcConfig import IAbcConfig
-
 from configuration.bean_config.IBeanConfig import IBeanConfig
-
 
 
 class EConfigType(str, Enum):
     bean = 'bean'
+
 
 config_type_map = {
     EConfigType.bean: IBeanConfig
