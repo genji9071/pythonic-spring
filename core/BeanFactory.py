@@ -5,9 +5,9 @@ from typing import Dict, List
 
 from configuration.ISpringConfig import ISpringConfig, EConfigType
 from configuration.bean_config.IBeanConfig import IBeanConfig
-from core.IBean import IBean
+from core.BeanProxy import BeanProxy
 
-_beans_dict_: Dict[str, IBean] = {}
+_beans_dict_: Dict[str, BeanProxy] = {}
 _beans_config_: Dict[str, IBeanConfig] = {}
 
 
@@ -17,8 +17,6 @@ class BeanFactory:
         self.working_directory = os.getcwd()
         self._load_property_(instance_path)
         self.add_beans_to_factory(scan_regex)
-        print(_beans_dict_)
-        print(_beans_config_)
 
     def add_beans_to_factory(self, scan_regex):
         root_module_name = os.path.basename(self.working_directory)
@@ -60,20 +58,32 @@ class BeanFactory:
         return result
 
     @staticmethod
-    def add_bean_to_factory(bean_class, bean_name):
+    def add_bean_to_factory(bean_name, bean_class=None) -> BeanProxy:
         prop_dict = {}
         bean_config = _beans_config_.get(bean_name)
         if bean_config is not None:
             prop_dict = zip(map(lambda x: x.name, bean_config.properties),
                             map(lambda x: x.value, bean_config.properties))
-        instance = bean_class.__new__(bean_class)
-        instance.__init__(**dict(prop_dict))
-        _beans_dict_[bean_name] = instance
+        if bean_class:
+            instance = bean_class.__new__(bean_class)
+            instance.__init__(**dict(prop_dict))
+            if bean_name in _beans_dict_:
+                _beans_dict_[bean_name].inject_bean(instance, bean_name)
+            else:
+                # bean_proxy = BeanProxy.__new__(BeanProxy)
+                # bean_proxy.__init__()
+                # bean_proxy = BeanProxy()
+                # bean_proxy.inject_bean(instance, bean_name)
+                bean_proxy = BeanProxy(instance, bean_name)
+                _beans_dict_[bean_name] = bean_proxy
+        else:
+            _beans_dict_[bean_name] = BeanProxy(None, bean_name)
+        return _beans_dict_[bean_name]
 
     @staticmethod
-    def get_bean_by_name(name: str) -> IBean:
+    def get_bean_by_name(name: str) -> BeanProxy:
         return _beans_dict_.get(name)
 
     @staticmethod
-    def get_beans_by_type(cls) -> List[IBean]:
+    def get_beans_by_type(cls) -> List[BeanProxy]:
         return list(filter(lambda x: x.__class__.__name__ == cls, _beans_dict_.values()))
