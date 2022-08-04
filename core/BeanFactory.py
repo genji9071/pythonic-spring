@@ -6,17 +6,20 @@ from typing import Dict, List
 from configuration.ISpringConfig import ISpringConfig, EConfigType
 from configuration.bean_config.IBeanConfig import IBeanConfig
 from core.BeanProxy import BeanProxy
-
-_beans_dict_: Dict[str, BeanProxy] = {}
-_beans_config_: Dict[str, IBeanConfig] = {}
+from utils.GlobalInjector import global_injector
 
 
 class BeanFactory:
+    __beans_dict__: Dict[str, BeanProxy] = {}
+    __beans_config__: Dict[str, IBeanConfig] = {}
 
-    def __init__(self, instance_path, scan_regex):
+    def __init__(self, spring_app, scan_regex):
+        if not spring_app or spring_app.__class__.__name__ != "SpringApplication":
+            raise ValueError("Invalid BeanFactory initialize, Please use SpringApplication()")
         self.working_directory = os.getcwd()
-        self._load_property_(instance_path)
-        self.add_beans_to_factory(scan_regex)
+        self._load_property_()
+        with global_injector(__bean_factory__=self):
+            self.add_beans_to_factory(scan_regex)
 
     def add_beans_to_factory(self, scan_regex):
         root_module_name = os.path.basename(self.working_directory)
@@ -34,14 +37,14 @@ class BeanFactory:
             self.recursive_import(next_dict, f"{pkgpath}/{file}", f"{module_path}.{file}")
             __import__(f"{module_path}.{file}")
 
-    def _load_property_(self, instance_path):
+    def _load_property_(self):
         for relpath, dirs, files in os.walk(self.working_directory):
             if "spring.json" in files:
                 try:
                     with open(os.path.join(relpath, "spring.json"), 'r') as load_f:
                         load_conf = ISpringConfig(**json.load(load_f))
                     if load_conf.config_type == EConfigType.bean:
-                        _beans_config_.setdefault(load_conf.detail.id, load_conf.detail)
+                        self.__beans_config__.setdefault(load_conf.detail.id, load_conf.detail)
                 except Exception as ex:
                     print(f'??? {ex}')
 
@@ -57,29 +60,26 @@ class BeanFactory:
             cursor[paths[-1]] = None
         return result
 
-    @staticmethod
-    def add_bean_to_factory(bean_name, bean_class=None) -> BeanProxy:
+    def add_bean_to_factory(self, bean_name, bean_class=None) -> BeanProxy:
         prop_dict = {}
-        bean_config = _beans_config_.get(bean_name)
+        bean_config = self.__beans_config__.get(bean_name)
         if bean_config is not None:
             prop_dict = zip(map(lambda x: x.name, bean_config.properties),
                             map(lambda x: x.value, bean_config.properties))
         if bean_class:
             instance = bean_class.__new__(bean_class)
             instance.__init__(**dict(prop_dict))
-            if bean_name in _beans_dict_:
-                _beans_dict_[bean_name].inject_bean(instance, bean_name)
+            if bean_name in self.__beans_dict__:
+                self.__beans_dict__[bean_name].inject_bean(instance, bean_name)
             else:
                 bean_proxy = BeanProxy(instance, bean_name)
-                _beans_dict_[bean_name] = bean_proxy
+                self.__beans_dict__[bean_name] = bean_proxy
         else:
-            _beans_dict_[bean_name] = BeanProxy(None, bean_name)
-        return _beans_dict_[bean_name]
+            self.__beans_dict__[bean_name] = BeanProxy(None, bean_name)
+        return self.__beans_dict__[bean_name]
 
-    @staticmethod
-    def get_bean_by_name(name: str) -> BeanProxy:
-        return _beans_dict_.get(name)
+    def get_bean_by_name(self, name: str) -> BeanProxy:
+        return self.__beans_dict__.get(name)
 
-    @staticmethod
-    def get_beans_by_type(cls) -> List[BeanProxy]:
-        return list(filter(lambda x: x.__class__.__name__ == cls, _beans_dict_.values()))
+    def get_beans_by_type(self, cls) -> List[BeanProxy]:
+        return list(filter(lambda x: x.__class__.__name__ == cls, self.__beans_dict__.values()))
