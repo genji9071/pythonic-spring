@@ -70,10 +70,6 @@ class BeanFactory:
             if bean_name in _beans_dict_:
                 _beans_dict_[bean_name].inject_bean(instance, bean_name)
             else:
-                # bean_proxy = BeanProxy.__new__(BeanProxy)
-                # bean_proxy.__init__()
-                # bean_proxy = BeanProxy()
-                # bean_proxy.inject_bean(instance, bean_name)
                 bean_proxy = BeanProxy(instance, bean_name)
                 _beans_dict_[bean_name] = bean_proxy
         else:
