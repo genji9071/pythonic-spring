@@ -41,4 +41,3 @@ class BeanProxy:
 
     def __repr__(self):
         return f"BeanProxy@@[{self._bean_.__repr__()}]"
-
