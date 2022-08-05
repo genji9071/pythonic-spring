@@ -4,10 +4,13 @@ from core.BeanFactory import BeanFactory
 
 
 class SpringApplication:
+    __instance__ = None
     __bean_factory__: BeanFactory
 
     def __init__(self, scan_regex: Optional[List[str]] = None):
-        self.__bean_factory__ = BeanFactory(self, scan_regex)
+        if not SpringApplication.__instance__:
+            SpringApplication.__instance__ = self
+            self.__bean_factory__ = BeanFactory(self, scan_regex)
 
     def get_bean_by_id(self, bean_id: str):
         return self.__bean_factory__.get_bean_by_name(bean_id)

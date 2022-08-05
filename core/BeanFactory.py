@@ -10,6 +10,7 @@ from utils.GlobalInjector import global_injector
 
 
 class BeanFactory:
+    __instance__ = None
     __beans_dict__: Dict[str, BeanProxy] = {}
     __beans_config__: Dict[str, IBeanConfig] = {}
 
@@ -20,6 +21,13 @@ class BeanFactory:
         self._load_property_()
         with global_injector(__bean_factory__=self):
             self.add_beans_to_factory(scan_regex)
+
+    def __new__(cls, *args, **kwargs):
+        if not BeanFactory.__instance__:
+            BeanFactory.__instance__ = object.__new__(cls)
+        else:
+            raise ValueError("Duplicated BeanFactory initialize")
+        return BeanFactory.__instance__
 
     def add_beans_to_factory(self, scan_regex):
         root_module_name = os.path.basename(self.working_directory)

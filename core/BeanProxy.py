@@ -13,6 +13,9 @@ class BeanProxy:
     def get_bean_name(self):
         return self._bean_id_
 
+    def is_injected(self):
+        return self._bean_ is not None
+
     def __getattr__(self, name):
         return getattr(self._bean_, name)
 
