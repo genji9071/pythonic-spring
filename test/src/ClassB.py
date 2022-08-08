@@ -1,6 +1,6 @@
-from annocation.Autowired import Autowired
-from annocation.Service import Service
-from core.SpringApplication import SpringApplication
+from pythonicspring import Autowired
+from pythonicspring import Service
+from pythonicspring import SpringApplication
 from test.src import ClassC
 
 

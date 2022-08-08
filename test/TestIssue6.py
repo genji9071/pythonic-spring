@@ -1,9 +1,9 @@
-from core.SpringApplication import SpringApplication
+from pythonicspring import SpringApplication
 
 if __name__ == '__main__':
     app = SpringApplication()
     try:
-        from core.BeanFactory import BeanFactory
+        from pythonicspring.core.BeanFactory import BeanFactory
 
         bean_factory = BeanFactory(None, None)
         print(f"BeanFactory init check failed!")

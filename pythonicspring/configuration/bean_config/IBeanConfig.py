@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from configuration.IAbcConfig import IAbcConfig
+from pythonicspring.configuration.IAbcConfig import IAbcConfig
 
 
 class IBeanConfigProperty(BaseModel):

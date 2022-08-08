@@ -1,7 +1,7 @@
 from enum import Enum
 
-from configuration.IAbcConfig import IAbcConfig
-from configuration.bean_config.IBeanConfig import IBeanConfig
+from pythonicspring.configuration.IAbcConfig import IAbcConfig
+from pythonicspring.configuration.bean_config.IBeanConfig import IBeanConfig
 
 
 class EConfigType(str, Enum):

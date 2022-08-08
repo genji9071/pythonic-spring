@@ -3,9 +3,9 @@ import os
 import pkgutil
 from typing import Dict, List
 
-from configuration.ISpringConfig import ISpringConfig, EConfigType
-from configuration.bean_config.IBeanConfig import IBeanConfig
-from core.BeanProxy import BeanProxy
+from pythonicspring.configuration.ISpringConfig import ISpringConfig, EConfigType
+from pythonicspring.configuration.bean_config.IBeanConfig import IBeanConfig
+from pythonicspring.core.BeanProxy import BeanProxy
 from utils.GlobalInjector import global_injector
 
 

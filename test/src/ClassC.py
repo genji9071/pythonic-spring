@@ -1,5 +1,5 @@
-from annocation.Autowired import Autowired
-from annocation.Service import Service
+from pythonicspring import Autowired
+from pythonicspring import Service
 from test.src import ClassB, ClassA
 
 

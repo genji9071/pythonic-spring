@@ -17,12 +17,15 @@ spring.json：扫描并反序列，供BeanFactory读取
 
 ### 创建实例
 
+    from pythonicspring import SpringApplication
     app = SpringApplication(）
 
 ### 声明需要bean化的类，使用类装饰器：Service
 
 ### 声明类内需要引用的bean，在__init__方法上使用装饰器：Autowired
 
+    from pythonicspring import Service
+    from pythonicspring import Autowired
     @Service
     class ClassA：
     

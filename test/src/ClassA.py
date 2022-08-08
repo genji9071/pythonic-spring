@@ -1,4 +1,4 @@
-from annocation.Service import Service
+from pythonicspring import Service
 
 
 @Service(bean_id='ClassAAA')
