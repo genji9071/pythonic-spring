@@ -6,7 +6,7 @@ from typing import Dict, List
 from pythonicspring.configuration.ISpringConfig import ISpringConfig, EConfigType
 from pythonicspring.configuration.bean_config.IBeanConfig import IBeanConfig
 from pythonicspring.core.BeanProxy import BeanProxy
-from utils.GlobalInjector import global_injector
+from pythonicspring.utils.GlobalInjector import global_injector
 
 
 class BeanFactory:
