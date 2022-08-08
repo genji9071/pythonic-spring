@@ -2,7 +2,7 @@
 
 用python实现spring，结合flask或者fastapi等使用，可以像springboot一样统一管理类的生成和调用，相比较原先python通过在类声明外面整实例的情况，防止了写代码时循环调用的风险，也可以为java中比较常见的多态和继承在python中的实战化做基底。
 
-## 0.0.0.1:
+## 当前最新版本 0.0.1.1:
 
 两个装饰器：
 
@@ -14,6 +14,10 @@ SpringApplication：构建即使用，支持输入通配扫描代码并延迟imp
 spring.json：扫描并反序列，供BeanFactory读取
 
 ## 使用方法
+
+### 安装pip包  
+
+    pip install pythonic-spring
 
 ### 创建实例
 
